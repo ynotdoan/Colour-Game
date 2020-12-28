@@ -93,12 +93,27 @@ def show_result(frame):
   result_frame = tk.Frame(wn, background = "green")
   # congrats message
   tk.Label(result_frame, 
-          text = f"Correct!! {time_diff:.2f} s", 
+          text = "Correct!!", 
           background = "green", 
           foreground = "black", 
           font = b_font, 
-          ).pack(anchor = "center", expand = True)
-  # more labels here...
+          ).pack(anchor = "center", pady = 20)
+  tk.Label(result_frame, 
+           text = f"Nice job! You guessed the right colour in {time_diff:.2f} s.\n\
+                    \nClick 'Play again' to play the game again \nor 'EXIT' to close the program.", 
+           background = "green", 
+           foreground = "black", 
+           font = s_font, 
+           ).pack(anchor = "center", pady = 20)
+  # replay button
+  tk.Button(result_frame, 
+            text = "Play again", 
+            background = "grey", 
+            foreground = "white", 
+            width = 20, 
+            font = s_font, 
+            command = lambda: show_game(result_frame), 
+            ).pack(anchor = "center", pady = 10)
   # quit button
   tk.Button(result_frame, 
             text = "EXIT", 
@@ -107,30 +122,32 @@ def show_result(frame):
             width = 20, 
             font = s_font, 
             command = quit
-            ).pack(anchor = "center", expand = True)
+            ).pack(anchor = "center", pady = 10)
   
   result_frame.pack(fill = "both", expand = True)
   result_frame.focus_set()
   result_frame.bind("<Return>", lambda event: show_game(result_frame))
+
   
 def check_entry(entry):
   global time_diff
+  
+  incorrect_message = tk.Label(game_frame, 
+                               text = "Incorrect! Try again...", 
+                               background = colours[bg_colour], 
+                               foreground = colours[txt_colour], 
+                               font = s_font, 
+                               )
   
   if (entry == colours[txt_colour]):
     # gets current time when guess is correct and finds time difference
     time_diff = time.perf_counter() - start_time
     show_result(game_frame)
   elif (entry != colours[txt_colour]):
-    # displays incorrect message 
-    incorrect = tk.Label(game_frame, 
-                         text = "Incorrect! Try again...", 
-                         background = colours[bg_colour], 
-                         foreground = colours[txt_colour], 
-                         font = s_font, 
-                         )
-    incorrect.pack(anchor = "center", side = "bottom"), 
-    incorrect.after(1000, incorrect.destroy())
-    
+    # displays message that guess is wrong and disappears after 1 sec
+    incorrect_message.pack(anchor = "center", side = "bottom")
+    wn.after(1000, incorrect_message.destroy)
+
 
 wn = tk.Tk()
 wn.title("Colour Guessing Game")
