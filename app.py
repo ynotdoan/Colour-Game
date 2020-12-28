@@ -6,14 +6,18 @@ import random_gen as r
 
 b_font = ("times", 40, "bold")
 s_font = ("times", 12, "bold")
+# colours program can choose from
 colours = ["red", "orange", "yellow", "green", "blue", "purple", 
            "black", "white", "pink", "brown", "grey"]
 
 
 def get_colours():
+  '''
+  Uses random_gen to get a random colour for each variable.
+  '''
   # makes variables global to be accessible by rest of program
   global bg_colour, txt, txt_colour
-  # calls random_gen to get random value in colours
+  # calls random_gen to get random value in colours and assigns to variables
   while (True):
     bg_colour = r.get_random_num(colours)
     txt = r.get_random_num(colours)
@@ -26,6 +30,9 @@ def get_colours():
 
 
 def show_start():
+  '''
+  Displays start frame with title and instructions.
+  '''
   start_frame = tk.Frame(wn, background = "gold")
   # game title
   tk.Label(start_frame, 
@@ -54,7 +61,11 @@ def show_start():
 
 
 def show_game(frame):
+  '''
+  Displays game frame with different background/text colours.
+  '''
   frame.destroy()
+  # calls get_colours to get new randomized colours each time game starts
   get_colours()
   
   global game_frame, start_time
@@ -84,10 +95,14 @@ def show_game(frame):
   game_frame.pack(fill = "both", expand = True)
   # starts timer after game_frame is shown
   start_time = time.perf_counter()
+  # calls check_entry every time 'Enter' is pressed
   entry.bind("<Return>", lambda event: check_entry(entry.get()))
 
 
 def show_result(frame):
+  '''
+  Displays results frame with time and options to replay/Displays
+  '''
   frame.destroy()
   
   result_frame = tk.Frame(wn, background = "green")
@@ -125,11 +140,12 @@ def show_result(frame):
             ).pack(anchor = "center", pady = 10)
   
   result_frame.pack(fill = "both", expand = True)
-  result_frame.focus_set()
-  result_frame.bind("<Return>", lambda event: show_game(result_frame))
 
   
 def check_entry(entry):
+  '''
+  Checks whether entry is right or not.
+  '''
   global time_diff
   
   incorrect_message = tk.Label(game_frame, 
@@ -152,6 +168,7 @@ def check_entry(entry):
 wn = tk.Tk()
 wn.title("Colour Guessing Game")
 wn.minsize(400, 400) # widthxheight
+wn.iconphoto(False, tk.PhotoImage(file = "colourGame-logo.png"))
 
 show_start()
 wn.mainloop()
